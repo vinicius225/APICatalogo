@@ -1,4 +1,5 @@
-﻿using APICatalogo.Models;
+﻿using System.Data;
+using APICatalogo.Models;
 using APICatalogo.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +11,10 @@ namespace APICatalogo.Controllers
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutoRepository _produtoRepository;
-        private readonly ICategoryRepository _categoryRepository;
 
-        public ProdutosController(IProdutoRepository produtoRepository, ICategoryRepository categoryRepository)
+        public ProdutosController(IProdutoRepository produtoRepository)
         {
             _produtoRepository = produtoRepository;
-            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
@@ -46,7 +45,7 @@ namespace APICatalogo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Produto produto)
+        public ActionResult<Produto> Post(Produto produto)
         {
             if (produto is null)
                 return BadRequest();
@@ -55,6 +54,28 @@ namespace APICatalogo.Controllers
 
             return new CreatedAtRouteResult("ObterProduto",
                 new { id = produto.ProdutoId }, produto);
+        }
+        [HttpPut]
+        public ActionResult<Produto> Put (Produto produto)
+        {
+            if (produto is null)
+                return BadRequest();
+
+            _produtoRepository.Update(produto);
+
+            return Ok (produto);
+        }
+        [HttpDelete]
+        public ActionResult<Produto> Delete(Produto produto)
+        {
+            if(produto != null)
+            {
+                _produtoRepository.Delete(produto);
+                return NoContent();
+            }else
+            {
+                return NotFound();
+            }
         }
     }
 }

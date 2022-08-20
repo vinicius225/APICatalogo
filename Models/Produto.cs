@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace APICatalogo.Models
 {
@@ -18,6 +20,8 @@ namespace APICatalogo.Models
         public string ImageUrl { get; set; } = string.Empty;
 
         public int IdCategoria { get; set; }
+        [JsonIgnore]
+        [XmlIgnore]
         public Categoria Categoria { get; set; }
     }
 }
